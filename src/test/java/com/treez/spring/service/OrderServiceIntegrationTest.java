@@ -72,6 +72,17 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
+    public void testUpdateOrder() {
+        String updateOrderUrl = String.format("%s%s", "/orders/", savedOrder.getId());
+        Order fetchedOrder = restTemplate.getForObject(updateOrderUrl, Order.class);
+        Assert.assertEquals(fetchedOrder.getCustomerEmailAddress(), savedOrder.getCustomerEmailAddress());
+        savedOrder.setCustomerEmailAddress("testUpdate@testDomain.com");
+        restTemplate.put(updateOrderUrl, savedOrder);
+        Order updatedOrder = restTemplate.getForObject(updateOrderUrl, Order.class);
+        Assert.assertEquals(updatedOrder.getCustomerEmailAddress(), "testUpdate@testDomain.com");
+    }
+
+    @Test
     public void testDeleteOrder() {
         String orderUrl = String.format("%s%s", "/orders/", savedOrder.getId());
         restTemplate.delete(orderUrl);
